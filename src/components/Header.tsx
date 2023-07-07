@@ -11,7 +11,6 @@ interface HeaderProps {
 export const styles = StyleSheet.create({
   header: {
     height: 40,
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

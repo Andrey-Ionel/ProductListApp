@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeContainer from '../containers/HomeContainer';
+import ProductListContainer from '../containers/ProductListContainer';
 import PDPContainer from '../containers/PDPContainer';
 
 import { styles } from './Header';
@@ -13,17 +13,17 @@ export const Navigation = () => {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={'Home'}>
+      <Stack.Navigator initialRouteName={'ProductList'}>
         <Stack.Screen
-          name="Home"
-          component={HomeContainer}
+          name="ProductList"
+          component={ProductListContainer}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="PDP"
-          component={PDPContainer}
+          component={PDPContainer as FC}
           options={{
-            title: 'Опис товару',
+            title: 'Product Detail',
             headerTitleStyle: styles.title,
             headerTintColor: colors.textPrimary,
             headerShadowVisible: false,

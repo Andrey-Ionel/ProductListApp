@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logError } from './constants';
 
 export enum AsyncStorageKeys {
-  credentials = 'credentials',
+  productsData = 'productsData',
 }
 
 export const setStorageValue = async (key: AsyncStorageKeys, value: any) => {
@@ -36,8 +36,4 @@ export const getStorageValue = async (
   }
 
   return storageValue;
-};
-
-export const removeStorageValue = async (): Promise<void> => {
-  await AsyncStorage.removeItem(AsyncStorageKeys.credentials);
 };
