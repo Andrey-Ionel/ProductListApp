@@ -20,16 +20,8 @@ const keyboardAvoidingDefaults: KeyboardAvoidingViewProps = {
 };
 
 const styles = StyleSheet.create({
-  background: {},
   container: {
     flex: 1,
-  },
-  headerContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 30,
-    marginTop: 40,
   },
 });
 

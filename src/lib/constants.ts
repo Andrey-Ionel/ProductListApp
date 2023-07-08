@@ -10,3 +10,5 @@ export const HIT_SLOP_AREA = {
   bottom: 10,
   left: 10,
 };
+
+export const CONTAINS_ONLY_DIGITS_REGEX = /^[0-9.,]+$/;

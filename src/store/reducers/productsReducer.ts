@@ -1,5 +1,5 @@
-import { SET_ERROR, SET_PRODUCTS } from '../actions';
-import { ActionReducer, ReduxProductData } from '../types';
+import { createSlice } from '@reduxjs/toolkit';
+import { ReduxProductData } from '../types';
 import { Product } from '../../dataSource/types';
 
 const initialState: ReduxProductData = {
@@ -7,18 +7,25 @@ const initialState: ReduxProductData = {
   error: '',
 };
 
-const productsReducer = (
-  state: ReduxProductData = initialState,
-  { type, payload }: ActionReducer,
-) => {
-  switch (type) {
-    case SET_PRODUCTS:
-      return { ...state, products: payload as Product[] };
-    case SET_ERROR:
-      return { ...state, error: payload as string };
-    default:
-      return state;
-  }
-};
+const productsReducer = createSlice({
+  name: 'products',
+  initialState,
+  reducers: {
+    getProducts(state, { payload }) {
+      state.products = payload as Product[];
+    },
+    addNewProduct(state, { payload }) {
+      state.products = [payload as Product, ...state.products];
+    },
+    updateProduct(state, { payload }) {
+      state.products = payload as Product[];
+    },
+    getError(state, { payload }) {
+      state.error = payload as string;
+    },
+  },
+});
 
-export default productsReducer;
+export const { getProducts, addNewProduct, updateProduct, getError } =
+  productsReducer.actions;
+export default productsReducer.reducer;

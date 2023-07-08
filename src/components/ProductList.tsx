@@ -21,18 +21,20 @@ import {
   setStorageValue,
 } from '../lib/asyncStorage';
 import Image from 'react-native-fast-image';
+import { logError } from '../lib/constants';
+import { PSButton } from './PSButton';
 
 import { Product } from '../dataSource/types';
 
 import { fonts } from '../styles/fonts';
 import colors from '../styles/colors';
-import { HIT_SLOP_AREA, logError } from '../lib/constants';
 
 export interface ProductListProps {
   navigation: NavigationProp<ParamListBase>;
   products: Product[];
   error: string;
-  getProductsRequest: () => Promise<Product[]>;
+  getProductsRequest: () => Promise<void>;
+  updateProductsRequest: (products: Product[]) => Promise<void>;
 }
 
 const screenHeight = Dimensions.get('window').height;
@@ -41,24 +43,6 @@ const styles = StyleSheet.create({
   screenContainer: {
     minHeight: screenHeight,
     paddingBottom: 30,
-  },
-  btn: {
-    borderRadius: 0,
-    backgroundColor: colors.backgroundPrimary,
-    padding: 15,
-    lineHeight: 22,
-    fontSize: 18,
-    marginVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 300,
-    alignSelf: 'center',
-  },
-  btnText: {
-    fontSize: 18,
-    fontFamily: fonts.ghotamBlack,
-    textAlign: 'center',
-    color: colors.textSecondary,
   },
   listData: {
     backgroundColor: 'transparent',
@@ -95,47 +79,64 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     color: colors.textPrimary,
   },
+  noResult: {
+    fontFamily: fonts.gotham,
+    fontSize: 18,
+    letterSpacing: 1,
+    paddingVertical: 5,
+    marginLeft: 40,
+  },
 });
 
 const productListText = 'Product List';
 const addItemText = 'Add Product';
 
 export const ProductList: FC<ProductListProps> = memo(
-  ({ navigation, getProductsRequest, error }) => {
-    const [productData, setProductData] = useState<Product[]>();
+  ({
+    navigation,
+    getProductsRequest,
+    updateProductsRequest,
+    error,
+    products,
+  }) => {
     const [loading, setLoading] = useState(false);
 
-    const saveProducts = async () => {
-      setLoading(true);
-      await getStorageValue(AsyncStorageKeys.productsData).then(
-        async storageData => {
-          if (storageData?.length && storageData?.length > 2) {
-            setProductData(JSON.parse(storageData));
-            setLoading(false);
-          } else {
-            const queryProducts: Product[] = await getProductsRequest();
-            if (queryProducts?.length) {
-              setProductData(queryProducts);
-              await setStorageValue(
-                AsyncStorageKeys.productsData,
-                queryProducts,
-              ).catch(e => logError(e));
+    const setProducts = async () => {
+      try {
+        setLoading(true);
+        await getStorageValue(AsyncStorageKeys.productsData).then(
+          async storageData => {
+            if (storageData?.length && storageData?.length > 2) {
+              const parseStorageData = JSON.parse(storageData);
+              updateProductsRequest(parseStorageData);
+              setLoading(false);
+            } else {
+              await getProductsRequest().then(async () => {
+                await setStorageValue(
+                  AsyncStorageKeys.productsData,
+                  products,
+                ).catch(e => logError(e));
+              });
+              setLoading(false);
             }
-            setLoading(false);
-          }
-        },
-      );
+          },
+        );
+      } catch (e) {
+        setLoading(false);
+      }
     };
 
     useEffect(() => {
-      saveProducts().catch(e => logError(e));
+      setProducts().catch(e => logError(e));
     }, []);
 
     const goToPDP = (item: Product) => () => {
       navigation.navigate('PDP', { item });
     };
 
-    const addProduct = async () => {};
+    const addProduct = async () => {
+      navigation.navigate('AddProductsForm');
+    };
 
     const keyExtractor: FlatListProps<Product>['keyExtractor'] = (item, i) =>
       item + i.toString();
@@ -156,14 +157,7 @@ export const ProductList: FC<ProductListProps> = memo(
     };
 
     const renderButton = () => {
-      return (
-        <TouchableOpacity
-          onPress={addProduct}
-          style={styles.btn}
-          hitSlop={HIT_SLOP_AREA}>
-          <Text style={styles.btnText}>{addItemText}</Text>
-        </TouchableOpacity>
-      );
+      return <PSButton title={addItemText} addProduct={addProduct} />;
     };
 
     const renderHeader = () => {
@@ -174,7 +168,16 @@ export const ProductList: FC<ProductListProps> = memo(
       return <View style={styles.separator} />;
     };
 
-    if (error.length) {
+    const renderNoProducts = () => {
+      const noResultText = 'There are no products for you at the moment.';
+      return (
+        <View>
+          <Text style={styles.noResult}>{noResultText}</Text>
+        </View>
+      );
+    };
+
+    if (error?.length) {
       Alert.alert(
         'Something went wrong while trying to get products.',
         `"${error}"`,
@@ -195,9 +198,10 @@ export const ProductList: FC<ProductListProps> = memo(
           <FlatList
             keyExtractor={keyExtractor}
             style={styles.listData}
-            data={productData}
+            data={products}
             renderItem={({ item }) => renderItem(item)}
             ItemSeparatorComponent={renderSeparator}
+            ListEmptyComponent={renderNoProducts()}
           />
         </ScreenWrapper>
       </LinearGradient>

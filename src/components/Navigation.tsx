@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductListContainer from '../containers/ProductListContainer';
 import PDPContainer from '../containers/PDPContainer';
+import AddProductsContainer from '../containers/AddProductsContainer';
 
 import { styles } from './Header';
 
@@ -18,6 +19,16 @@ export const Navigation = () => {
           name="ProductList"
           component={ProductListContainer}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddProductsForm"
+          component={AddProductsContainer as FC}
+          options={{
+            title: 'Add Product',
+            headerTitleStyle: styles.title,
+            headerTintColor: colors.textPrimary,
+            headerShadowVisible: false,
+          }}
         />
         <Stack.Screen
           name="PDP"

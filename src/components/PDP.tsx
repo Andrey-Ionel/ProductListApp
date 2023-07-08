@@ -10,9 +10,10 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Image from 'react-native-fast-image';
 
+import { Product } from '../dataSource/types';
+
 import { fonts } from '../styles/fonts';
 import colors from '../styles/colors';
-import { Product } from '../dataSource/types';
 
 export interface PDPProps {
   navigation: NavigationProp<ParamListBase>;

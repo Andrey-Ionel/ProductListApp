@@ -5,8 +5,8 @@ export interface ReduxProductData {
   error: string;
 }
 
-export type CombinedPayload = Product[] | string;
+export type CombinedPayload = Product[] | string | Product;
 export interface ActionReducer {
   type: string;
-  payload: CombinedPayload;
+  payload: any;
 }
