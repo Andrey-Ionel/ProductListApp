@@ -1,2 +1,2 @@
-import { PDP } from '../components/PDP';
+import { PDP } from '../components/pdp';
 export default PDP;

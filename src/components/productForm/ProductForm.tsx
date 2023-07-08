@@ -1,12 +1,7 @@
 import React, { FC, memo, useEffect, useState } from 'react';
-import {
-  Dimensions,
-  KeyboardAvoidingView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, View } from 'react-native';
 
-import { ScreenWrapper } from './ScreenWrapper';
+import { ScreenWrapper } from '../ScreenWrapper';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   Formik,
@@ -20,80 +15,17 @@ import {
   FormFieldType,
   regexSchemaPresets,
   textInputProps,
-} from '../lib/formikPresets';
-import { PSButton } from './PSButton';
-import FormTextInput, { FormTextInputType } from './TextInput';
-import { isIos, logError } from '../lib/constants';
-import { Loading } from './Loading';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { AsyncStorageKeys, setStorageValue } from '../lib/asyncStorage';
+} from '../../lib/formikPresets';
+import { PSButton } from '../PSButton';
+import FormTextInput, { FormTextInputType } from '../TextInput';
+import { isIos, logError } from '../../lib/constants';
+import { Loading } from '../Loading';
+import { AsyncStorageKeys, setStorageValue } from '../../lib/asyncStorage';
 
-import { Product } from '../dataSource/types';
+import { FormFields, ProductFormFields, ProductFormProps } from './types';
 
-import colors from '../styles/colors';
-import { fonts } from '../styles/fonts';
-
-export interface AddProductsFormProps {
-  addProductRequest: (
-    title: string,
-    price: string,
-    description: string,
-  ) => Promise<void>;
-  updateProductsRequest: (products: Product[]) => Promise<void>;
-  products: Product[];
-  error: string;
-  navigation: NavigationProp<ParamListBase>;
-}
-
-interface AddProductFormFields {
-  title: string;
-  price: string;
-  description: string;
-}
-
-interface FormFields {
-  formFieldName: string;
-  required: boolean;
-  title: string;
-}
-
-const screenHeight = Dimensions.get('window').height;
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    minHeight: screenHeight,
-    margin: 15,
-    paddingBottom: 100,
-  },
-  errorIcon: {
-    height: 12,
-    width: 13,
-    bottom: 2,
-  },
-  errorMessage: {
-    fontFamily: fonts.gotham,
-    fontWeight: '500',
-    fontSize: 13,
-    lineHeight: 13,
-    letterSpacing: 0.5,
-  },
-  container: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  borderRect: {
-    borderRadius: 0,
-  },
-  input: {
-    paddingTop: 15,
-    paddingBottom: 10,
-    lineHeight: 17,
-  },
-  imageStyles: {
-    height: 30,
-    width: 30,
-  },
-});
+import colors from '../../styles/colors';
+import { styles } from './styles';
 
 const commonInputProps = {
   errorIconStyle: styles.errorIcon,
@@ -111,7 +43,7 @@ const generateFormSchema = () =>
 
 const addItemText = 'Add';
 
-export const AddProductsForm: FC<AddProductsFormProps> = memo(
+export const ProductForm: FC<ProductFormProps> = memo(
   ({ addProductRequest, products, navigation }) => {
     const [loading, setLoading] = useState(false);
 
@@ -125,7 +57,7 @@ export const AddProductsForm: FC<AddProductsFormProps> = memo(
       setProducts().catch(e => logError(e));
     }, [products.length]);
 
-    const addProduct: FormikConfig<AddProductFormFields>['onSubmit'] =
+    const addProduct: FormikConfig<ProductFormFields>['onSubmit'] =
       async values => {
         try {
           setLoading(true);
@@ -162,7 +94,7 @@ export const AddProductsForm: FC<AddProductsFormProps> = memo(
       },
     ];
 
-    const formikConfig: FormikConfig<AddProductFormFields> = {
+    const formikConfig: FormikConfig<ProductFormFields> = {
       validateOnChange: true,
       validateOnBlur: true,
       validationSchema: generateFormSchema(),
@@ -186,7 +118,7 @@ export const AddProductsForm: FC<AddProductsFormProps> = memo(
           scroll={true}>
           <View style={styles.container}>
             <Formik {...formikConfig}>
-              {(props: FormikProps<AddProductFormFields>) => {
+              {(props: FormikProps<ProductFormFields>) => {
                 const {
                   handleSubmit,
                   setFieldValue,
@@ -222,7 +154,7 @@ export const AddProductsForm: FC<AddProductsFormProps> = memo(
                           textInputStyles={[styles.input, styles.borderRect]}
                           errorsMessage={
                             errors[
-                              field.formFieldName as keyof FormikErrors<AddProductFormFields>
+                              field.formFieldName as keyof FormikErrors<ProductFormFields>
                             ] || ''
                           }
                           required={field.required}
@@ -231,12 +163,12 @@ export const AddProductsForm: FC<AddProductsFormProps> = memo(
                           setFormikField={setFieldValue}
                           value={
                             values[
-                              field.formFieldName as keyof AddProductFormFields
+                              field.formFieldName as keyof ProductFormFields
                             ]
                           }
                           touched={
                             !!touched[
-                              field.formFieldName as keyof FormikTouched<AddProductFormFields>
+                              field.formFieldName as keyof FormikTouched<ProductFormFields>
                             ]
                           }
                           {...commonInputProps}

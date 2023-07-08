@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { connect } from 'react-redux';
 
-import { ProductList } from '../components/ProductList';
+import { ProductList } from '../components/productList';
 import { getProductsRequest, updateProductsRequest } from '../store/actions';
 import { Product } from '../dataSource/types';
 

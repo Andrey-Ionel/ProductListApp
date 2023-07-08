@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProductListContainer from '../containers/ProductListContainer';
 import PDPContainer from '../containers/PDPContainer';
-import AddProductsContainer from '../containers/AddProductsContainer';
+import ProductFormContainer from '../containers/ProductFormContainer';
 
 import { styles } from './Header';
 
@@ -18,16 +18,24 @@ export const Navigation = () => {
         <Stack.Screen
           name="ProductList"
           component={ProductListContainer}
-          options={{ headerShown: false }}
+          options={{
+            headerShown: false,
+            statusBarColor: colors.textPrimary,
+            orientation: 'portrait',
+            headerTitleAlign: 'center',
+          }}
         />
         <Stack.Screen
           name="AddProductsForm"
-          component={AddProductsContainer as FC}
+          component={ProductFormContainer as FC}
           options={{
             title: 'Add Product',
             headerTitleStyle: styles.title,
             headerTintColor: colors.textPrimary,
             headerShadowVisible: false,
+            statusBarColor: colors.textPrimary,
+            orientation: 'portrait',
+            headerTitleAlign: 'center',
           }}
         />
         <Stack.Screen
@@ -38,6 +46,9 @@ export const Navigation = () => {
             headerTitleStyle: styles.title,
             headerTintColor: colors.textPrimary,
             headerShadowVisible: false,
+            statusBarColor: colors.textPrimary,
+            orientation: 'portrait',
+            headerTitleAlign: 'center',
           }}
         />
       </Stack.Navigator>

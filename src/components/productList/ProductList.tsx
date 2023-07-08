@@ -1,92 +1,31 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import {
   Alert,
-  Dimensions,
   FlatList,
   FlatListProps,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
-import { Header } from './Header';
-import { Loading } from './Loading';
-import { ScreenWrapper } from './ScreenWrapper';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { Header } from '../Header';
+import { Loading } from '../Loading';
+import { ScreenWrapper } from '../ScreenWrapper';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   AsyncStorageKeys,
   getStorageValue,
   setStorageValue,
-} from '../lib/asyncStorage';
+} from '../../lib/asyncStorage';
 import Image from 'react-native-fast-image';
-import { logError } from '../lib/constants';
-import { PSButton } from './PSButton';
+import { logError } from '../../lib/constants';
+import { PSButton } from '../PSButton';
 
-import { Product } from '../dataSource/types';
+import { Product } from '../../dataSource/types';
+import { ProductListProps } from './types';
 
-import { fonts } from '../styles/fonts';
-import colors from '../styles/colors';
-
-export interface ProductListProps {
-  navigation: NavigationProp<ParamListBase>;
-  products: Product[];
-  error: string;
-  getProductsRequest: () => Promise<void>;
-  updateProductsRequest: (products: Product[]) => Promise<void>;
-}
-
-const screenHeight = Dimensions.get('window').height;
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    minHeight: screenHeight,
-    paddingBottom: 30,
-  },
-  listData: {
-    backgroundColor: 'transparent',
-    flex: 1,
-    margin: 15,
-  },
-  separator: {
-    borderBottomColor: colors.separatorPrimary,
-    borderBottomWidth: 0.4,
-    marginVertical: 30,
-  },
-  productImageStyle: {
-    width: 125,
-    height: 125,
-    resizeMode: 'contain',
-  },
-  rowContainer: {
-    flexDirection: 'row',
-  },
-  itemContent: {
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  title: {
-    fontSize: 18,
-    fontFamily: fonts.ghotamBlack,
-    marginHorizontal: 10,
-    color: colors.textPrimary,
-    flexWrap: 'wrap',
-  },
-  price: {
-    fontSize: 20,
-    fontFamily: fonts.bebasNeue,
-    marginHorizontal: 10,
-    color: colors.textPrimary,
-  },
-  noResult: {
-    fontFamily: fonts.gotham,
-    fontSize: 18,
-    letterSpacing: 1,
-    paddingVertical: 5,
-    marginLeft: 40,
-  },
-});
+import colors from '../../styles/colors';
+import { styles } from './styles';
 
 const productListText = 'Product List';
 const addItemText = 'Add Product';

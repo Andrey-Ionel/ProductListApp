@@ -1,4 +1,4 @@
-import { AddProductsForm } from '../components/AddProductsForm';
+import { ProductForm } from '../components/productForm';
 import { addProductRequest, updateProductsRequest } from '../store/actions';
 import { Product } from '../dataSource/types';
 import { connect } from 'react-redux';
@@ -15,7 +15,4 @@ const mapDispatchToProps = {
   addProductRequest,
   updateProductsRequest,
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AddProductsForm as FC);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductForm as FC);
